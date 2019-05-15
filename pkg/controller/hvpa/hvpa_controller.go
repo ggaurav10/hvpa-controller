@@ -27,7 +27,7 @@ import (
 	autoscalingv1alpha1 "github.com/gardener/hvpa-controller/pkg/apis/autoscaling/v1alpha1"
 	appsv1 "k8s.io/api/apps/v1"
 	autoscalingv1 "k8s.io/api/autoscaling/v1"
-	autoscaling "k8s.io/api/autoscaling/v2beta2"
+	autoscaling "k8s.io/api/autoscaling/v2beta1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -889,6 +889,8 @@ func getWeightedRequests(vpaStatus *vpa_api.VerticalPodAutoscalerStatus, hvpa *a
 	for _, rec := range recommendations.ContainerRecommendations {
 		for id, container := range newPodSpec.Containers {
 			if rec.ContainerName == container.Name {
+				log.Info("VPA", "check for container:", container.Name)
+
 				vpaMemTarget := rec.Target.Memory().DeepCopy()
 				vpaCPUTarget := rec.Target.Cpu().DeepCopy()
 				currMem := newPodSpec.Containers[id].Resources.Requests.Memory().DeepCopy()
