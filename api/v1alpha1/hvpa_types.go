@@ -40,6 +40,8 @@ type UpdatePolicy struct {
 	// Controls when autoscaler applies changes to the resources.
 	// The default is 'Auto'.
 	// +optional
+	// +kubebuilder:validation:Enum=Auto;Off;MaintenanceWindow
+	// +kubebuilder:default=Auto
 	UpdateMode *string `json:"updateMode,omitempty" protobuf:"bytes,1,opt,name=updateMode"`
 }
 
@@ -58,8 +60,10 @@ const (
 // MaintenanceTimeWindow contains information about the time window for maintenance operations.
 type MaintenanceTimeWindow struct {
 	// Begin is the beginning of the time window in the format HHMMSS+ZONE, e.g. "220000+0100".
+	// +kubebuilder:validation:Pattern="^([0-1]?\\d|2[0-3])[0-5]\\d[0-5]\\d[+-][0-1]\\d{3}$"
 	Begin string `json:"begin"`
 	// End is the end of the time window in the format HHMMSS+ZONE, e.g. "220000+0100".
+	// +kubebuilder:validation:Pattern="^([0-1]?\\d|2[0-3])[0-5]\\d[0-5]\\d[+-][0-1]\\d{3}$"
 	End string `json:"end"`
 }
 
@@ -89,8 +93,6 @@ type HpaTemplateSpec struct {
 // WeightBasedScalingInterval defines the interval of replica counts in which VpaWeight is applied to VPA scaling
 type WeightBasedScalingInterval struct {
 	// VpaWeight defines the weight (in percentage) to be given to VPA's recommendationd for the interval of number of replicas provided
-	// +kubebuilder:validation:Minimum=0
-	// +kubebuilder:validation:Maximum=100
 	VpaWeight VpaWeight `json:"vpaWeight,omitempty"`
 	// StartReplicaCount is the number of replicas from which VpaWeight is applied to VPA scaling
 	// If this field is not provided, it will default to minReplicas of HPA
@@ -227,13 +229,18 @@ type HvpaSpec struct {
 type ChangeParams struct {
 	// Value is the absolute value of the scaling
 	// +optional
+	// +kubebuilder:validation:Pattern="^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$"
+	// Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
 	Value *string `json:"value,omitempty"`
 	// Percentage is the percentage of currently allocated value to be used for scaling
 	// +optional
+	// +kubebuilder:validation:Minimum=0
 	Percentage *int32 `json:"percentage,omitempty"`
 }
 
 // VpaWeight - weight to provide to VPA scaling
+// +kubebuilder:validation:Minimum=0
+// +kubebuilder:validation:Maximum=100
 type VpaWeight int32
 
 const (
