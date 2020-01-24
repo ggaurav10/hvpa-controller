@@ -96,7 +96,7 @@ HVPA will scale `limits` also along with `requests` based on following criteria:
 Example 1:
 
 ```yaml
-apiVersion: autoscaling.k8s.io/v1alpha1
+apiVersion: autoscaling.gardener.cloud/v1alpha1
 kind: Hvpa
 metadata:
   name: hvpa-sample
@@ -213,7 +213,7 @@ request
 
 Example 2:
 ```yaml
-apiVersion: autoscaling.k8s.io/v1alpha1
+apiVersion: autoscaling.gardener.cloud/v1alpha1
 kind: Hvpa
 metadata:
   name: hvpa-sample
@@ -253,7 +253,7 @@ request
 
 Example 3: After maxReplicas, even if weight is not mentioned, there is only vertical scaling because HPA is limited by maxReplicas
 ```yaml
-apiVersion: autoscaling.k8s.io/v1alpha1
+apiVersion: autoscaling.gardener.cloud/v1alpha1
 kind: Hvpa
 metadata:
   name: hvpa-sample

@@ -3,14 +3,19 @@
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.2.4
   creationTimestamp: null
-  name: hvpas.autoscaling.k8s.io
+  name: hvpas.autoscaling.gardener.cloud
 spec:
-  group: autoscaling.k8s.io
+  group: autoscaling.gardener.cloud
   names:
     kind: Hvpa
+    listKind: HvpaList
     plural: hvpas
-  scope: ""
+    singular: hvpa
+  preserveUnknownFields: false
+  scope: Namespaced
   subresources:
     scale:
       labelSelectorPath: .status.targetSelector
@@ -57,9 +62,12 @@ spec:
                               description: Percentage is the percentage of currently
                                 allocated value to be used for scaling
                               format: int32
+                              minimum: 0
                               type: integer
                             value:
                               description: Value is the absolute value of the scaling
+                                Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
+                              pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                               type: string
                           type: object
                         memory:
@@ -69,9 +77,12 @@ spec:
                               description: Percentage is the percentage of currently
                                 allocated value to be used for scaling
                               format: int32
+                              minimum: 0
                               type: integer
                             value:
                               description: Value is the absolute value of the scaling
+                                Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
+                              pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                               type: string
                           type: object
                         replicas:
@@ -81,9 +92,12 @@ spec:
                               description: Percentage is the percentage of currently
                                 allocated value to be used for scaling
                               format: int32
+                              minimum: 0
                               type: integer
                             value:
                               description: Value is the absolute value of the scaling
+                                Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
+                              pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                               type: string
                           type: object
                       type: object
@@ -98,8 +112,13 @@ spec:
                         to their default values.
                       properties:
                         updateMode:
+                          default: Auto
                           description: Controls when autoscaler applies changes to
                             the resources. The default is 'Auto'.
+                          enum:
+                          - Auto
+                          - "Off"
+                          - MaintenanceWindow
                           type: string
                       type: object
                   type: object
@@ -118,9 +137,12 @@ spec:
                               description: Percentage is the percentage of currently
                                 allocated value to be used for scaling
                               format: int32
+                              minimum: 0
                               type: integer
                             value:
                               description: Value is the absolute value of the scaling
+                                Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
+                              pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                               type: string
                           type: object
                         memory:
@@ -130,9 +152,12 @@ spec:
                               description: Percentage is the percentage of currently
                                 allocated value to be used for scaling
                               format: int32
+                              minimum: 0
                               type: integer
                             value:
                               description: Value is the absolute value of the scaling
+                                Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
+                              pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                               type: string
                           type: object
                         replicas:
@@ -142,9 +167,12 @@ spec:
                               description: Percentage is the percentage of currently
                                 allocated value to be used for scaling
                               format: int32
+                              minimum: 0
                               type: integer
                             value:
                               description: Value is the absolute value of the scaling
+                                Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
+                              pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                               type: string
                           type: object
                       type: object
@@ -159,8 +187,13 @@ spec:
                         to their default values.
                       properties:
                         updateMode:
+                          default: Auto
                           description: Controls when autoscaler applies changes to
                             the resources. The default is 'Auto'.
+                          enum:
+                          - Auto
+                          - "Off"
+                          - MaintenanceWindow
                           type: string
                       type: object
                   type: object
@@ -215,8 +248,9 @@ spec:
                     will be created.
                   properties:
                     metadata:
-                      description: Metadata of the pods created from this template.
+                      description: Metadata of the HPA created from this template.
                       type: object
+                      x-kubernetes-preserve-unknown-fields: true
                     spec:
                       description: Spec defines the behavior of a HPA.
                       properties:
@@ -547,10 +581,12 @@ spec:
                 begin:
                   description: Begin is the beginning of the time window in the format
                     HHMMSS+ZONE, e.g. "220000+0100".
+                  pattern: ^([0-1]?\d|2[0-3])[0-5]\d[0-5]\d[+-][0-1]\d{3}$
                   type: string
                 end:
                   description: End is the end of the time window in the format HHMMSS+ZONE,
                     e.g. "220000+0100".
+                  pattern: ^([0-1]?\d|2[0-3])[0-5]\d[0-5]\d[+-][0-1]\d{3}$
                   type: string
               required:
               - begin
@@ -594,9 +630,12 @@ spec:
                           description: Percentage is the percentage of currently allocated
                             value to be used for scaling
                           format: int32
+                          minimum: 0
                           type: integer
                         value:
                           description: Value is the absolute value of the scaling
+                            Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
+                          pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                           type: string
                       type: object
                     memory:
@@ -606,9 +645,12 @@ spec:
                           description: Percentage is the percentage of currently allocated
                             value to be used for scaling
                           format: int32
+                          minimum: 0
                           type: integer
                         value:
                           description: Value is the absolute value of the scaling
+                            Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
+                          pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                           type: string
                       type: object
                     replicas:
@@ -618,9 +660,12 @@ spec:
                           description: Percentage is the percentage of currently allocated
                             value to be used for scaling
                           format: int32
+                          minimum: 0
                           type: integer
                         value:
                           description: Value is the absolute value of the scaling
+                            Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
+                          pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                           type: string
                       type: object
                   type: object
@@ -639,9 +684,12 @@ spec:
                               description: Percentage is the percentage of currently
                                 allocated value to be used for scaling
                               format: int32
+                              minimum: 0
                               type: integer
                             value:
                               description: Value is the absolute value of the scaling
+                                Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
+                              pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                               type: string
                           type: object
                         memory:
@@ -651,9 +699,12 @@ spec:
                               description: Percentage is the percentage of currently
                                 allocated value to be used for scaling
                               format: int32
+                              minimum: 0
                               type: integer
                             value:
                               description: Value is the absolute value of the scaling
+                                Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
+                              pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                               type: string
                           type: object
                         replicas:
@@ -663,9 +714,12 @@ spec:
                               description: Percentage is the percentage of currently
                                 allocated value to be used for scaling
                               format: int32
+                              minimum: 0
                               type: integer
                             value:
                               description: Value is the absolute value of the scaling
+                                Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
+                              pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                               type: string
                           type: object
                       type: object
@@ -680,8 +734,13 @@ spec:
                         to their default values.
                       properties:
                         updateMode:
+                          default: Auto
                           description: Controls when autoscaler applies changes to
                             the resources. The default is 'Auto'.
+                          enum:
+                          - Auto
+                          - "Off"
+                          - MaintenanceWindow
                           type: string
                       type: object
                   type: object
@@ -700,9 +759,12 @@ spec:
                               description: Percentage is the percentage of currently
                                 allocated value to be used for scaling
                               format: int32
+                              minimum: 0
                               type: integer
                             value:
                               description: Value is the absolute value of the scaling
+                                Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
+                              pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                               type: string
                           type: object
                         memory:
@@ -712,9 +774,12 @@ spec:
                               description: Percentage is the percentage of currently
                                 allocated value to be used for scaling
                               format: int32
+                              minimum: 0
                               type: integer
                             value:
                               description: Value is the absolute value of the scaling
+                                Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
+                              pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                               type: string
                           type: object
                         replicas:
@@ -724,9 +789,12 @@ spec:
                               description: Percentage is the percentage of currently
                                 allocated value to be used for scaling
                               format: int32
+                              minimum: 0
                               type: integer
                             value:
                               description: Value is the absolute value of the scaling
+                                Refer https://github.com/kubernetes/apimachinery/blob/release-1.17/pkg/api/resource/quantity.go#L132-L140
+                              pattern: ^([+-]?[0-9.]+)([eEinumkKMGTP]*[-+]?[0-9]*)$
                               type: string
                           type: object
                       type: object
@@ -741,8 +809,13 @@ spec:
                         to their default values.
                       properties:
                         updateMode:
+                          default: Auto
                           description: Controls when autoscaler applies changes to
                             the resources. The default is 'Auto'.
+                          enum:
+                          - Auto
+                          - "Off"
+                          - MaintenanceWindow
                           type: string
                       type: object
                   type: object
@@ -797,8 +870,9 @@ spec:
                     will be created.
                   properties:
                     metadata:
-                      description: Metadata of the pods created from this template.
+                      description: Metadata of the VPA created from this template.
                       type: object
+                      x-kubernetes-preserve-unknown-fields: true
                     spec:
                       description: Spec defines the behavior of a VPA.
                       properties:
@@ -871,6 +945,8 @@ spec:
                       given to VPA's recommendationd for the interval of number of
                       replicas provided
                     format: int32
+                    maximum: 100
+                    minimum: 0
                     type: integer
                 type: object
               type: array
@@ -884,21 +960,33 @@ spec:
               description: Current HPA UpdatePolicy set in the spec
               properties:
                 updateMode:
+                  default: Auto
                   description: Controls when autoscaler applies changes to the resources.
                     The default is 'Auto'.
+                  enum:
+                  - Auto
+                  - "Off"
+                  - MaintenanceWindow
                   type: string
               type: object
             hpaScaleUpUpdatePolicy:
               description: Current HPA UpdatePolicy set in the spec
               properties:
                 updateMode:
+                  default: Auto
                   description: Controls when autoscaler applies changes to the resources.
                     The default is 'Auto'.
+                  enum:
+                  - Auto
+                  - "Off"
+                  - MaintenanceWindow
                   type: string
               type: object
             hpaWeight:
               description: VpaWeight - weight to provide to VPA scaling
               format: int32
+              maximum: 100
+              minimum: 0
               type: integer
             lastBlockedScaling:
               items:
@@ -1174,24 +1262,37 @@ spec:
               description: Current VPA UpdatePolicy set in the spec
               properties:
                 updateMode:
+                  default: Auto
                   description: Controls when autoscaler applies changes to the resources.
                     The default is 'Auto'.
+                  enum:
+                  - Auto
+                  - "Off"
+                  - MaintenanceWindow
                   type: string
               type: object
             vpaScaleUpUpdatePolicy:
               description: Current VPA UpdatePolicy set in the spec
               properties:
                 updateMode:
+                  default: Auto
                   description: Controls when autoscaler applies changes to the resources.
                     The default is 'Auto'.
+                  enum:
+                  - Auto
+                  - "Off"
+                  - MaintenanceWindow
                   type: string
               type: object
             vpaWeight:
               description: VpaWeight - weight to provide to VPA scaling
               format: int32
+              maximum: 100
+              minimum: 0
               type: integer
           type: object
       type: object
+  version: v1alpha1
   versions:
   - name: v1alpha1
     served: true

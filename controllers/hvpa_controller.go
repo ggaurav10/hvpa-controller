@@ -51,7 +51,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/source"
 )
 
-var controllerKindHvpa = autoscalingv1alpha1.SchemeGroupVersionHvpa.WithKind("Hvpa")
+var controllerKindHvpa = autoscalingv1alpha1.SchemeGroupVersion.WithKind("Hvpa")
 
 // HvpaReconciler reconciles a Hvpa object
 type HvpaReconciler struct {
@@ -1287,8 +1287,8 @@ func getThreshold(thresholdVals *autoscalingv1alpha1.ChangeParams, resourceType 
 // +kubebuilder:rbac:groups=batch,resources=jobs,verbs=get;list;watch;update;patch
 // +kubebuilder:rbac:groups="",resources=pods;replicationcontrollers,verbs=get;list;watch;update;patch
 // +kubebuilder:rbac:groups=apps,resources=daemonsets;replicasets;statefulsets;deployments,verbs=get;list;watch;update;patch
-// +kubebuilder:rbac:groups=autoscaling.k8s.io,resources=hvpas,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=autoscaling.k8s.io,resources=hvpas/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=autoscaling.gardener.cloud,resources=hvpas,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=autoscaling.gardener.cloud,resources=hvpas/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups="",resources=events,verbs=get;watch;list
 func (r *HvpaReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()

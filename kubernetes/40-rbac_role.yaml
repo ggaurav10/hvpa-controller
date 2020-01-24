@@ -49,7 +49,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - autoscaling.k8s.io
+  - autoscaling.gardener.cloud
   resources:
   - hvpas
   verbs:
@@ -61,7 +61,7 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - autoscaling.k8s.io
+  - autoscaling.gardener.cloud
   resources:
   - hvpas/status
   verbs:

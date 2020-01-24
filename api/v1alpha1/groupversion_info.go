@@ -16,7 +16,7 @@ limitations under the License.
 
 // Package v1alpha1 contains API Schema definitions for the autoscaling v1alpha1 API group
 // +kubebuilder:object:generate=true
-// +groupName=autoscaling.k8s.io
+// +groupName=autoscaling.gardener.cloud
 package v1alpha1
 
 import (
@@ -28,13 +28,10 @@ import (
 
 var (
 	// GroupName is the group name use in this package
-	GroupName = "autoscaling.k8s.io"
+	GroupName = "autoscaling.gardener.cloud"
 
-	// SchemeGroupVersionVpa is group version used to register these objects
-	SchemeGroupVersionVpa = schema.GroupVersion{Group: GroupName, Version: "v1beta2"}
-
-	// SchemeGroupVersionHvpa is group version used to register these objects
-	SchemeGroupVersionHvpa = schema.GroupVersion{Group: GroupName, Version: "v1alpha1"}
+	// SchemeGroupVersion is group version used to register these objects
+	SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: "v1alpha1"}
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)
@@ -54,15 +51,15 @@ func init() {
 
 // Adds the list of known types to api.Scheme.
 func addKnownTypes(scheme *runtime.Scheme) error {
-	scheme.AddKnownTypes(SchemeGroupVersionHvpa,
+	scheme.AddKnownTypes(SchemeGroupVersion,
 		&Hvpa{},
 		&HvpaList{},
 	)
-	scheme.AddKnownTypes(SchemeGroupVersionVpa,
+	scheme.AddKnownTypes(vpa_api.SchemeGroupVersion,
 		&vpa_api.VerticalPodAutoscaler{},
 		&vpa_api.VerticalPodAutoscalerList{},
 	)
-	metav1.AddToGroupVersion(scheme, SchemeGroupVersionVpa)
-	metav1.AddToGroupVersion(scheme, SchemeGroupVersionHvpa)
+	metav1.AddToGroupVersion(scheme, vpa_api.SchemeGroupVersion)
+	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
 	return nil
 }
