@@ -1,6 +1,6 @@
 # hvpa-controller
 
-[![CI Build status](https://concourse.ci.infra.gardener.cloud/api/v1/teams/gardener/pipelines/hvpa-controller-master/jobs/master-head-update-job/badge)](https://concourse.ci.infra.gardener.cloud/teams/gardener/pipelines/hvpa-controller-master/jobs/master-head-update-job)
+[![CI Build status](https://concourse.ci.gardener.cloud/api/v1/teams/gardener/pipelines/hvpa-controller-master/jobs/master-head-update-job/badge)](https://concourse.ci.gardener.cloud/teams/gardener/pipelines/hvpa-controller-master/jobs/master-head-update-job)
 [![Go Report Card](https://goreportcard.com/badge/github.com/gardener/hvpa-controller)](https://goreportcard.com/report/github.com/gardener/hvpa-controller)
 
 ### Goals
@@ -150,7 +150,7 @@ spec:
           value: "3"
           percentage: 80
         memory:
-          value: "3"
+          value: "1500M"
           percentage: 80
     scaleDown:
       updatePolicy:
@@ -161,7 +161,7 @@ spec:
           value: "3"
           percentage: 80
         memory:
-          value: "3"
+          value: "3000M"
           percentage: 80
     limitsRequestsGapScaleParams:
       cpu:
